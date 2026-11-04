@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import animaisRoutes from "./routes/animais.routes.js";
+import marcacoesRoutes from "./routes/marcacoes.routes.js";
 import db from "./db/db.js"; 
 // # Servidor
 // PORT=3000
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/animais", animaisRoutes);
+app.use("/api/marcacoes", marcacoesRoutes);
 
 const PORT = process.env.PORT;
 
