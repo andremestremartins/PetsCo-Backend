@@ -3,23 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import animaisRoutes from "./routes/animais.routes.js";
 import db from "./db/db.js"; 
-// # Servidor
-// PORT=3000
-// NODE_ENV=development
 
-// # Banco de Dados MySQL
-// DB_HOST=localhost
-// DB_USER=root
-// DB_PASSWORD=123
-// DB_NAME=petsco
-// DB_CONNECTION_LIMIT=10
-
-// # JWT (Authentication)
-// JWT_SECRET=seu_segredo_muito_forte_e_aleatorio_aqui_minimo_32_caracteres_123456
-// JWT_EXPIRES_IN=5h
-
-// # CORS
-// FRONTEND_URL=
 dotenv.config();
 
 const app = express();

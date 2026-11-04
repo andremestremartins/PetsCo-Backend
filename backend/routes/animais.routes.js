@@ -1,15 +1,18 @@
 import express from "express";
+import db from "../db/db.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res)  => {
+    const [animais] = await db.query("select * from animais");
     res.json({
-        mensagem: "Lista de todos os animais"
+        animais
     });
 });
 
 router.get("/:id", (req, res) => {
     const { id } = req.params;
+    // const animal
     res.json({
         mensagem: `A mostrar o animal com o ID: ${id}`
     });
@@ -41,3 +44,4 @@ router.delete("/:id", (req, res) => {
 });
 
 export default router;
+
