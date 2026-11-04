@@ -2,7 +2,9 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import animaisRoutes from "./routes/animais.routes.js";
+import adminRoutes from "./routes/admin.routes.js"; // Importado de acordo com o teu exemplo
 import db from "./db/db.js"; 
+
 // # Servidor
 // PORT=3000
 // NODE_ENV=development
@@ -31,9 +33,11 @@ app.get("/", (req, res) => {
   res.json({ name: "Petsco" });
 });
 
+// Rotas da API
 app.use("/api/animais", animaisRoutes);
+app.use("/api/admin", adminRoutes); // Mapeado para responder em /api/admin/...
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000; 
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
