@@ -3,8 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import animaisRoutes from "./routes/animais.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
-import db from "./db/db.js"; 
+import db from "./config/db.js"; 
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/animais", animaisRoutes);
 app.use("/api/auth/", authRoutes);
+app.use("/api/admin", adminRoutes)
 
 const PORT = process.env.PORT;
 
