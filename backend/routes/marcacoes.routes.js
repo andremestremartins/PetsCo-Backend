@@ -3,68 +3,121 @@ import db from "../db/db.js";
 
 const router = express.Router();
 
-// recebe um pedido e cria uma marcacao
-router.post("/", async (req, res) => {
-    const { animal_id, service_id, data_inicio, data_fim } = req.body ?? {};
-
-    if (!animal_id || !service_id || !data_inicio || !data_fim) {
-        return res.status(400).json({
-            mensagem: "Preenche o animal, o serviço e as datas."
-        });
-    }
-
-    if (
-        !Number.isInteger(Number(animal_id)) || Number(animal_id) <= 0 ||
-        !Number.isInteger(Number(service_id)) || Number(service_id) <= 0
-    ) {
-        return res.status(400).json({
-            mensagem: "Os IDs do animal e do serviço devem ser números inteiros positivos."
-        });
-    }
-
+router.get("/", async (req, res) => {
     try {
-        const [animais] = await db.execute(
-            "SELECT animal_id FROM animais WHERE animal_id = ?",
-            [Number(animal_id)]
+        const [marcacoes] = await db.query(
+            "SELECT * FROM marcacoes"
         );
 
-        if (animais.length === 0) {
-            return res.status(404).json({
-                mensagem: "Animal não encontrado."
-            });
-        }
+        res.json({ marcacoes });
 
-        const [servicos] = await db.execute(
-            "SELECT service_id, ativo FROM servicos WHERE service_id = ?",
-            [Number(service_id)]
-        );
-
-        if (servicos.length === 0) {
-            return res.status(404).json({
-                mensagem: "Serviço não encontrado."
-            });
-        }
-
-        if (Number(servicos[0].ativo) !== 1) {
-            return res.status(400).json({
-                mensagem: "Este serviço não está disponível."
-            });
-        }
-
-        return res.json({
-            mensagem: "Dados recebidos. Animal e serviço verificados.",
-            dados: {
-                animal_id,
-                service_id,
-                data_inicio,
-                data_fim
-            }
+    } catch (error) {
+        res.status(500).json({
+            mensagem: "Erro ao procurar marcações.",
+            erro: error.message
         });
-    } catch (erro) {
-        console.error("Erro ao consultar a base de dados:", erro);
+    }
+});
 
-        return res.status(500).json({
-            mensagem: "Ocorreu um erro ao consultar a base de dados."
+
+router.get("/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [marcacoes] = await db.query(
+            "SELECT * FROM marcacoes WHERE marc_id = ?",
+            [id]
+        );
+
+        if (marcacoes.length === 0) {
+            return res.status(404).json({
+                mensagem: "Marcação não encontrada."
+            });
+        }
+
+        res.json({
+            marcacao: marcacoes[0]
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            mensagem: "Erro ao procurar marcação.",
+            erro: error.message
+        });
+    }
+});
+
+
+router.post("/", async (req, res) => {
+    try {
+        const {
+            util_id,
+            marc_id,
+            service_id,
+            estado_id,
+            data_inicio,
+            data_fim,
+            observacoes,
+            data_criacao,
+            data_atualizacao,
+            animal_id
+        } = req.body;
+
+        const [resultado] = await db.query(
+            `INSERT INTO marcacoes
+            (util_id, marc_id, service_id, estado_id, data_inicio,
+            data_fim, observacoes, data_criacao, data_atualizacao, animal_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                util_id,
+                marc_id,
+                service_id,
+                estado_id,
+                data_inicio,
+                data_fim,
+                observacoes,
+                data_criacao,
+                data_atualizacao,
+                animal_id
+            ]
+        );
+
+        res.status(201).json({
+            mensagem: "Marcação criada com sucesso!",
+            marcacao_id: resultado.insertId
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            mensagem: "Erro ao criar marcação.",
+            erro: error.message
+        });
+    }
+});
+
+router.patch("/:id/cancelar", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [resultado] = await db.query(
+            "UPDATE marcacoes SET estado_id = 3 WHERE marc_id = ?",
+            [id]
+        );  
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensagem: "Marcação não encontrada."
+            });
+        }
+        
+        res.json({
+            mensagem: "Marcação cancelada com sucesso!"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            mensagem: "Erro ao cancelar marcação.", 
+            erro: error.message
         });
     }
 });
