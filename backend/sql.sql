@@ -103,3 +103,20 @@ CREATE TABLE denuncias (
     CONSTRAINT fk_denuncias_marcacoes FOREIGN KEY (marc_id)
         REFERENCES marcacoes(marc_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE avaliacoes (
+    avaliacao_id INT AUTO_INCREMENT,
+    util_id INT NOT NULL,
+    marc_id INT NOT NULL,
+    classificacao INT NOT NULL CHECK (classificacao BETWEEN 1 AND 5),
+    comentario TEXT,
+    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_avaliacoes PRIMARY KEY (avaliacao_id),
+
+    CONSTRAINT fk_avaliacoes_utilizadores FOREIGN KEY (util_id)
+        REFERENCES utilizadores(util_id) ON DELETE CASCADE ON UPDATE CASCADE,
+
+    CONSTRAINT fk_avaliacoes_marcacoes FOREIGN KEY (marc_id)
+        REFERENCES marcacoes(marc_id) ON DELETE CASCADE ON UPDATE CASCADE
+)

@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
     try {
         const [denuncia] = await db.query(
-            "SELECT * FROM denuncia"
+            "SELECT * FROM denuncias"
         );
 
         res.json({ denuncia });
@@ -25,7 +25,7 @@ router.get("/:id", async (req, res) => {
         const { id } = req.params;
 
         const [denuncia] = await db.query(
-            "SELECT * FROM animais WHERE animal_id = ?",
+            "SELECT * FROM denuncias WHERE denuncia_id = ?",
             [id]
         );
 
@@ -36,7 +36,7 @@ router.get("/:id", async (req, res) => {
         }
 
         res.json({
-            denuncia: denuncias[0]
+            denuncia: denuncia[0]
         });
 
     } catch (error) {
@@ -51,32 +51,28 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const {
-            denuncia_id,
             util_id,
             marc_id,
-            categoria,
+            categoria_id,
             assunto,
             descricao,
-            estado ,
-            data_criacao
+            estado_id
         } = req.body;
 
         const [resultado] = await db.query(
-            `INSERT INTO denuncia
-            (denuncia_id, util_id, marc_id, categoria, assunto,
-            descricao, estado, data_criacao)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO denuncias
+           (util_id, marc_id, categoria_id, assunto, descricao, estado_id)
+            VALUES (?, ?, ?, ?, ?, ?)`,
             [
-                denuncia_id,
-                util_id, 
+                util_id,
                 marc_id,
-                categoria,
+                categoria_id,
                 assunto,
                 descricao,
-                estado,
-                data_criacao
+                estado_id
+                
             ]
-        );
+    );
 
         res.status(201).json({
             mensagem: "Denuncia enviada!",
@@ -98,38 +94,29 @@ router.put("/:id", async (req, res) => {
 
         const {
             util_id,
-            nome,
-            fotografia,
-            especie,
-            raca,
-            data_nascimento,
-            sexo,
-            peso,
-            informacoes
+            marc_id,
+            categoria_id,
+            estado_id,
+            assunto,
+            descricao
         } = req.body;
 
         const [denuncia] = await db.query(
-            `UPDATE animais SET
+            `UPDATE denuncias SET
             util_id = ?,
-            nome = ?,
-            fotografia = ?,
-            especie = ?,
-            raca = ?,
-            data_nascimento = ?,
-            sexo = ?,
-            peso = ?,
-            informacoes = ?
-            WHERE animal_id = ?`,
+            marc_id  = ?,
+            categoria_id  = ?,
+            estado_id  = ?,
+            assunto  = ?,
+            descricao  = ?
+            WHERE denuncia_id = ?`,
             [
                 util_id,
-                nome,
-                fotografia,
-                especie,
-                raca,
-                data_nascimento,
-                sexo,
-                peso,
-                informacoes,
+                marc_id,
+                categoria_id,
+                estado_id,
+                assunto,
+                descricao,
                 id
             ]
         );
@@ -138,8 +125,12 @@ router.put("/:id", async (req, res) => {
             return res.status(404).json({
                 mensagem: "denuncia não encontrado."
             });
+            
         }
-
+        res.json({
+               mensagem: `Denúncia com ID ${id} atualizada com sucesso!`
+               
+        });
     } catch (error) {
         res.status(500).json({
             mensagem: "Erro ao atualizar a denuncia.",
@@ -154,26 +145,24 @@ router.delete("/:id", async (req, res) => {
         const { id } = req.params;
 
         const [resultado] = await db.query(
-            "DELETE FROM animais WHERE animal_id = ?",
+            "DELETE FROM denuncias WHERE denuncia_id = ?",
             [id]
         );
 
         if (resultado.affectedRows === 0) {
             return res.status(404).json({
-                mensagem: "Animal não encontrado."
+                mensagem: "Denúncia não encontrada."
             });
         }
 
         res.json({
-            mensagem: `Animal com o ID ${id} apagado com sucesso!`
+            mensagem: `Denúncia com o ID ${id} apagada com sucesso!`
         });
 
     } catch (error) {
         res.status(500).json({
-            mensagem: "Erro ao apagar animal.",
+            mensagem: "Erro ao apagar denúncia.",
             erro: error.message
         });
     }
 });
-
-export default router;
