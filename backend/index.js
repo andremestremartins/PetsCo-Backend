@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 import animaisRoutes from "./routes/animais.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import servicosRoutes from "./routes/servicos.routes.js";
+import denuciasRoutes from "./routes/denuncias.routes.js";
+
+
 
 import db from "./config/db.js"; 
 
@@ -20,7 +24,9 @@ app.get("/", (req, res) => {
 
 app.use("/api/animais", animaisRoutes);
 app.use("/api/auth/", authRoutes);
-app.use("/api/admin", adminRoutes)
+app.use("/api/admin", adminRoutes);
+app.use("/api/servicos", servicosRoutes);
+app.use("/api/denucias", denuciasRoutes);
 
 const PORT = process.env.PORT;
 
