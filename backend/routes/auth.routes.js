@@ -22,7 +22,7 @@ function gerarToken(user) {
     process.env.JWT_SECRET,
     {
       expiresIn: "1d",
-    }
+    } 
   );
 }
 
