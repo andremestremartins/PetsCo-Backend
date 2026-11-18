@@ -120,3 +120,20 @@ CREATE TABLE avaliacoes (
     CONSTRAINT fk_avaliacoes_marcacoes FOREIGN KEY (marc_id)
         REFERENCES marcacoes(marc_id) ON DELETE CASCADE ON UPDATE CASCADE
 )
+CREATE TABLE notificacoes (
+    notificacao_id INT AUTO_INCREMENT,
+    util_id INT NOT NULL,
+    titulo VARCHAR(150) NOT NULL,
+    mensagem TEXT NOT NULL,
+    tipo VARCHAR(50) DEFAULT 'geral',
+    lida BOOLEAN DEFAULT FALSE,
+    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_notificacoes PRIMARY KEY (notificacao_id),
+
+    CONSTRAINT fk_notificacoes_utilizadores
+        FOREIGN KEY (util_id)
+        REFERENCES utilizadores(util_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
