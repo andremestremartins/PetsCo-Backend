@@ -5,11 +5,9 @@ import animaisRoutes from "./routes/animais.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import servicosRoutes from "./routes/servicos.routes.js";
-import denuciasRoutes from "./routes/denuncias.routes.js";
+import denunciasRoutes from "./routes/denuncias.routes.js";
 import marcacoesRoutes from "./routes/marcacoes.routes.js";
-
-
-
+import notificacoesRoutes from "./routes/notificacoes.routes.js";
 import db from "./config/db.js"; 
 
 dotenv.config();
@@ -27,9 +25,12 @@ app.use("/api/animais", animaisRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/servicos", servicosRoutes);
-app.use("/api/denucias", denuciasRoutes);
+app.use("/api/denuncias", denunciasRoutes);
 app.use("/api/marcacoes", marcacoesRoutes);
 app.use("/api/avaliacoes", avaliacoesRoutes);
+app.use("/api/notificacoes", notificacoesRoutes);
+
+
 
 const PORT = process.env.PORT;
 
